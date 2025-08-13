@@ -32,7 +32,10 @@ const PORT = process.env.PORT || 5000
 
 Sentry.setupExpressErrorHandler(app);
 
-// app.listen(PORT, () =>{
-//     console.log(`Server running on port ${PORT}`)})
-
-export const handler = ServerlessHttp(app);
+if(process.env.NODE_ENV === "production"){
+  module.exports = ServerlessHttp(app);
+}
+else {
+app.listen(PORT, () =>{
+    console.log(`Server running on port ${PORT}`)})
+}
