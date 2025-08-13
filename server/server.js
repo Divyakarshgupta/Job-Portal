@@ -6,7 +6,6 @@ import connectDB from "./config/db.js"
 import "./config/instrument.js"
 import * as Sentry from "@sentry/node"
 import { clerkWebhooks } from "./controller/Webhooks.js"
-import ServerlessHttp from "serverless-http"
 
 // initialize Express
 const app = express()
@@ -32,10 +31,5 @@ const PORT = process.env.PORT || 5000
 
 Sentry.setupExpressErrorHandler(app);
 
-if(process.env.NODE_ENV === "production"){
-  module.exports = ServerlessHttp(app);
-}
-else {
 app.listen(PORT, () =>{
     console.log(`Server running on port ${PORT}`)})
-}
