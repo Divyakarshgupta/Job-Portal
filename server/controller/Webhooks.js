@@ -4,13 +4,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
-// Api controller function to manage clerk user with mongoDB
+// Api controller function to manage clerk user with Database
 
 export const clerkWebhooks = async (req,res) => {
   try {
     
     //create a svix instance with clerk webhook secret 
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
+    console.log(process.env.CLERK_WEBHOOK_SECRET);
+    
 
     //verifing Headers 
     await whook.verify(JSON.stringify(req.body),{
@@ -21,6 +23,8 @@ export const clerkWebhooks = async (req,res) => {
 
     // getting data from req body
     const {data, type} = req.body;
+    console.log(data,type);
+    
 
     // switch case for diffent events
 
@@ -29,10 +33,10 @@ export const clerkWebhooks = async (req,res) => {
       
         const userData = {
           _id: data.id,
-          name: data.first_name+ ""+ data.last_name,
           email: data.email_addresses[0].email_address,
-          resume: "",
+          name: data.first_name+ ""+ data.last_name,
           image: data.image_url,
+          resume: "",
         }
         await User.create(userData);
         res.JSON({})
@@ -60,6 +64,6 @@ export const clerkWebhooks = async (req,res) => {
 
   } catch (error) {
     console.log(error.message);
-    res.JSON({success:false,message:"webhooks error"})    
+    res.JSON({success:false,message:"webhooks error"}); 
   }
 }
