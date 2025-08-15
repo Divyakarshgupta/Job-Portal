@@ -39,7 +39,7 @@ export const clerkWebhooks = async (req,res) => {
           resume: "",
         }
         await User.create(userData);
-        res.JSON({})
+        res.json({})
         break;
       }
       case "user.updated": {
@@ -50,12 +50,12 @@ export const clerkWebhooks = async (req,res) => {
           image: data.image_url,
         }
         await User.findByIdAndUpdate(data.id, userData)
-        res.JSON({})
+        res.json({})
         break;
       }
       case "user.deleted": {
        await User.findByIdAndDelete(data.id);
-       res.JSON({});
+       res.json({});
        break;        
       }
       default: 
@@ -64,6 +64,6 @@ export const clerkWebhooks = async (req,res) => {
 
   } catch (error) {
     console.log(error.message);
-    res.JSON({success:false,message:"webhooks error"}); 
+    res.json({success:false,message:"webhooks error"}); 
   }
 }
