@@ -1,11 +1,30 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { assets } from '../assets/assets'
+import { AppContext } from '../context/AppContext'
 
 const Dashboard = () => {
 
   const navigate = useNavigate();
+
+  const {companyData, setCompanyData , setCompanyToken} = useContext(AppContext);  
+
+  // function to logout for company
+  const logout = () => {
+    setCompanyToken(null);
+    localStorage.removeItem("companyToken");
+    setCompanyData(null);
+    navigate("/");
+  }
+
+  useEffect(() => {
+
+    if(companyData){
+      navigate("/dashboard/manage-jobs");
+    }
+  }, [companyData])
+  
 
   return (
     <div className='min-h-screen'>
@@ -13,17 +32,19 @@ const Dashboard = () => {
       <div className='shadow py-4'>
         <div className='px-5 flex justify-between'>
           <img onClick={e => navigate("/")} className='max-sm:w-32 cursor-pointer' src={assets.logo} alt="" />
-          <div className='flex items-center gap-3'>
-            <p className='max-sm:hidden'>Welcome , Recruiter</p>
+          { companyData && (
+           <div className='flex items-center gap-3'>
+            <p className='max-sm:hidden'>Welcome , {companyData.name}</p>
             <div className='relative group'>
-              <img className='w-8 border rounded-full' src={assets.company_icon} alt="" />
+              <img className='w-8 border rounded-full' src={companyData.image} alt="" />
               <div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black-500 rounded pt-12'>
                 <ul className='list-none m-0 p-2 rounded border text-sm bg-white '>
-                  <li className='px-2 py-1 pr-5 cursor-pointer'>Logout</li>
+                  <li onClick={logout} className='px-2 py-1 pr-5 cursor-pointer'>Logout</li>
                 </ul>
               </div>
             </div>
           </div>
+          )}
         </div>
       </div>
 
@@ -45,7 +66,7 @@ const Dashboard = () => {
               </NavLink>
             </ul>
           </div>
-          <div>
+          <div className='flex-1 h-full p-2 sm:p-5' >
             <Outlet/>
           </div>
       </div>
